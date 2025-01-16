@@ -22,20 +22,14 @@ public class RotationTest {
 
     @Test
     public void test_rotation_simple() {
-        String test_description = "rotating a small array";
         int[] A = {1, 2, 3, 4, 5};
         int[] A_orig = Arrays.copyOf(A, A.length);
         Rotation.rotate_ripple(A);
-        try {
-            assertTrue(is_rotated(A_orig, A));
-        } catch (Exception e) {
-            fail(test_description + e.toString());
-        }
+        assertTrue(is_rotated(A_orig, A));
     }
 
     @Test
     public void test_rotation_random() {
-        String test_description = "rotating an array with random integers";
         for (int t = 0; t != 100; ++t) {
             Random r = new Random();
             int[] A = new int[r.nextInt(100)];
@@ -45,11 +39,7 @@ public class RotationTest {
             int[] A_orig = Arrays.copyOf(A, A.length);
             Rotation.rotate_ripple(A);
 
-            try {
-                assertTrue(is_rotated(A_orig, A));
-            } catch (Exception e) {
-                fail(test_description + e.toString());
-            }
+            assertTrue(is_rotated(A_orig, A));
         }
     }
 }
