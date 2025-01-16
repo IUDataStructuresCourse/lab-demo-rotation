@@ -6,14 +6,17 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RotationTest {
-    // Test oracle
-    private static void rotate_save_n_shift(int[] A) {
-        if (A.length > 1) {
-            int last = A[A.length - 1];
-            for (int i=A.length - 1; i != 0; --i) {
-                A[i] = A[i-1];
+
+    //specification for ripple_rotate
+    static boolean is_rotated(int[] A_orig, int[] A_new) {
+        if (A_orig.length == 0) {
+            return Arrays.equals(A_orig, A_new);
+        } else {
+            boolean result = A_new[0] == A_orig[A_orig.length - 1];
+            for (int i = 0; i != A_orig.length - 1; ++i) {
+                result = result && (A_orig[i] == A_new[i + 1]);
             }
-            A[0] = last;
+            return result;
         }
     }
 
@@ -21,11 +24,10 @@ public class RotationTest {
     public void test_rotation_simple() {
         String test_description = "rotating a small array";
         int[] A = {1, 2, 3, 4, 5};
-        int[] B = {1, 2, 3, 4, 5};
-        rotate_save_n_shift(A);
-        Rotation.rotate_ripple(B);
+        int[] A_orig = Arrays.copyOf(A, A.length);
+        Rotation.rotate_ripple(A);
         try {
-            assertArrayEquals(A, B);
+            assertTrue(is_rotated(A_orig, A));
         } catch (Exception e) {
             fail(test_description + e.toString());
         }
@@ -34,18 +36,20 @@ public class RotationTest {
     @Test
     public void test_rotation_random() {
         String test_description = "rotating an array with random integers";
-        Random r = new Random();
-        int[] A = new int[100];
-        for (int i = 0; i != A.length; ++ i) {
-            A[i] = r.nextInt();
-        }
-        int[] B = Arrays.copyOf(A, A.length);
-        rotate_save_n_shift(A);
-        Rotation.rotate_ripple(B);
-        try {
-            assertArrayEquals(A, B);
-        } catch (Exception e) {
-            fail(test_description + e.toString());
+        for (int t = 0; t != 100; ++t) {
+            Random r = new Random();
+            int[] A = new int[r.nextInt(100)];
+            for (int i = 0; i != A.length; ++ i) {
+                A[i] = r.nextInt();
+            }
+            int[] A_orig = Arrays.copyOf(A, A.length);
+            Rotation.rotate_ripple(A);
+
+            try {
+                assertTrue(is_rotated(A_orig, A));
+            } catch (Exception e) {
+                fail(test_description + e.toString());
+            }
         }
     }
 }
